@@ -17,11 +17,11 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = "fynesse"
-DESCRIPTION = "Template files for performing fynesse pipeline data analysis with python."
-URL = "https://github.com/lawrennd/fynesse_template"
-EMAIL = "emal@domain.here"
-AUTHOR = "Givenname Familyname"
+NAME = "ADS Assessment"
+DESCRIPTION = "Tom Dunkley's assessment for advanced data science."
+URL = "https://github.com/tomdunkley/advanced_data_science_assessment.git"
+EMAIL = "td457@cam.ac.uk"
+AUTHOR = "Tom Dunkley"
 REQUIRES_PYTHON = ">=3.6.0"
 VERSION = "0.1.0"
 
