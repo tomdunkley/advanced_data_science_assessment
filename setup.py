@@ -22,12 +22,12 @@ DESCRIPTION = "Tom Dunkley's assessment for advanced data science."
 URL = "https://github.com/tomdunkley/advanced_data_science_assessment.git"
 EMAIL = "td457@cam.ac.uk"
 AUTHOR = "Tom Dunkley"
-REQUIRES_PYTHON = ">=3.6.0, <3.11.0"
+REQUIRES_PYTHON = ">=3.6.0"
 VERSION = "0.1.0"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    "pandas", "numpy", "jupyter", "matplotlib<3.4", 
+    "pandas", "numpy", "jupyter", "matplotlib==3.2.0", 
 ]
 
 # What packages are optional?
