@@ -27,7 +27,7 @@ VERSION = "0.1.0"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    "pandas", "numpy", "jupyter", "matplotlib", "osmnx"
+    "pandas", "numpy", "jupyter", "--no-cache-dir matplotlib", "osmnx"
 ]
 
 # What packages are optional?
