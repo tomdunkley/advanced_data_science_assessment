@@ -4,6 +4,7 @@ import osmnx, geopandas, yaml
 import pandas as pd
 from sqlalchemy.engine import create_engine
 from shapely.geometry import Point
+import pymysql.cursors
 
 
 # This file accesses the data
@@ -18,7 +19,7 @@ def data(lat, lon, bbox_size, date_str):
     min_lon = float(lon)-float(bbox_size)
     min_year = str(int(date_str[:4]) - 1) + date_str[4:]
     max_year = str(int(date_str[:4]) + 1) + date_str[4:]
-    df = getPostcodesWithinBbox(min_lat, max_lat, min_lon, max_lon, min_year, max_year, create_database_connection())
+    df = getPostcodesWithinBbox(min_lat, max_lat, min_lon, max_lon, min_year, max_year)
 
     # set geometry column
     df["geometry"] = geopandas.points_from_xy(df.longitude, df.lattitude)
@@ -56,32 +57,42 @@ def data(lat, lon, bbox_size, date_str):
 
 
 def create_database_connection():
-    """Create a connection to the database and return it"""
     database_details = {"url": "database-td457.cgrre17yxw11.eu-west-2.rds.amazonaws.com", 
                     "port": 3306}
 
-    # get credentials
-    with open("credentials.yaml", "w") as file:
-        credentials_dict = {'username': input("Username: "), 
-                            'password': input("Password: ")}
-        yaml.dump(credentials_dict, file)
+    conn = pymysql.connect(host=database_details["url"],
+                             user=input("Username: "),
+                             password=input("Password: "),
+                             database='property_prices',
+                             port=database_details["port"],
+                             local_infile=1)
 
-    with open("credentials.yaml") as file:
-        credentials = yaml.safe_load(file)
-    username = credentials["username"]
-    password = credentials["password"]
-    url = database_details["url"]
-
-    url = database_details["url"]
-
-    return create_engine("mariadb+pymysql://{}:{}@{}?local_infile=1".format(username, password, url))
+    return conn
 
 
 
-def getPostcodesWithinBbox(min_lat, max_lat, min_lon, max_lon, min_year, max_year, conn):
-    """Get all of the postcodes within the described box"""
-    conn.execute("USE property_prices;")
-    return pd.read_sql("SELECT * FROM pp_data JOIN postcode_data ON (postcode_data.postcode=pp_data.postcode AND lattitude < {} AND   lattitude > {} AND   longitude < {} AND   longitude > {}) WHERE pp_data.date_of_transfer <= {} AND pp_data.date_of_transfer >= {};".format(max_lat, min_lat, max_lon, min_lon, max_year, min_year), conn)
+def getPostcodesWithinBbox(min_lat, max_lat, min_lon, max_lon, min_date, max_date):
+    with create_database_connection() as conn:
+      with conn.cursor() as cursor:
+        sql = f"""SELECT * FROM postcode_data
+                  JOIN pp_data ON (pp_data.postcode = postcode_data.postcode)
+                  WHERE lattitude < {max_lat}
+                  and lattitude > {min_lat}
+                  and longitude < {max_lon}
+                  and longitude > {min_lon}
+                  and (date_of_transfer between '{min_date}' and '{max_date}')
+                  LIMIT 500;"""
+        print(sql)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+
+        field_names = [i[0] for i in cursor.description]
+
+    df = pd.DataFrame(result)
+    df.set_axis(field_names, axis=1, inplace=True)
+
+    return df
+
 
 # Create new distance function with schools as an argument
 def distance_to_nearest_school(lat, lon, schools):
