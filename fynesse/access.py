@@ -4,6 +4,7 @@ import osmnx, geopandas, yaml
 import pandas as pd
 from sqlalchemy.engine import create_engine
 from shapely.geometry import Point
+from ipywidgets import interact_manual, Text, Password
 
 
 # This file accesses the data
@@ -60,7 +61,16 @@ def create_database_connection():
     database_details = {"url": "database-td457.cgrre17yxw11.eu-west-2.rds.amazonaws.com", 
                     "port": 3306}
 
-    with open("defaults.yaml") as file:
+    # get credentials
+    @interact_manual(username=Text(description="Username:"), 
+                    password=Password(description="Password:"))
+    def write_credentials(username, password):
+        with open("credentials.yaml", "w") as file:
+            credentials_dict = {'username': username, 
+                                'password': password}
+            yaml.dump(credentials_dict, file)
+
+    with open("credentials.yaml") as file:
         credentials = yaml.safe_load(file)
     username = credentials["username"]
     password = credentials["password"]
@@ -69,6 +79,8 @@ def create_database_connection():
     url = database_details["url"]
 
     return create_engine("mariadb+pymysql://{}:{}@{}?local_infile=1".format(username, password, url))
+
+
 
 def getPostcodesWithinBbox(min_lat, max_lat, min_lon, max_lon, max_year, min_year, conn):
     """Get all of the postcodes within the described box"""
