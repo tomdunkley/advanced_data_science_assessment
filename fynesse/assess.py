@@ -16,7 +16,7 @@ import sklearn.feature_extraction"""
 
 def data(lat, lon, date_str, bbox_size):
     """Load the data from access and ensure missing values are correctly encoded as well as indices correct, column names informative, date and times correctly formatted. Return a structured data structure such as a data frame."""
-    df, schools, osm_data, roads = access.data(lat, lon, date_str, bbox_size)
+    df, schools, osm_data, roads = access.data(lat, lon, bbox_size, date_str)
 
     #### ADD ONE-HOT FOR ROAD TYPES
     road_types = list(df["road_type"].unique())
