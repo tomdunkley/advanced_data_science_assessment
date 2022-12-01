@@ -81,7 +81,7 @@ def create_database_connection():
 def getPostcodesWithinBbox(min_lat, max_lat, min_lon, max_lon, max_year, min_year, conn):
     """Get all of the postcodes within the described box"""
     conn.execute("USE property_prices;")
-    return pd.read_sql("SELECT postcode, lattitude, longitude FROM postcode_data WHERE lattitude < {} AND   lattitude > {} AND   longitude < {} AND   longitude > {} WHERE pp_data.date_of_transfer <= {} AND pp_data.date_of_transfer >= {};".format(max_lat, min_lat, max_lon, min_lon, max_year, min_year), conn)
+    return pd.read_sql("SELECT postcode, lattitude, longitude FROM postcode_data WHERE lattitude < {} AND   lattitude > {} AND   longitude < {} AND   longitude > {} AND pp_data.date_of_transfer <= {} AND pp_data.date_of_transfer >= {};".format(max_lat, min_lat, max_lon, min_lon, max_year, min_year), conn)
 
 # Create new distance function with schools as an argument
 def distance_to_nearest_school(lat, lon, schools):
