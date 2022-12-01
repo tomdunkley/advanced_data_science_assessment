@@ -5,6 +5,7 @@ import pandas as pd
 from sqlalchemy.engine import create_engine
 from shapely.geometry import Point
 import pymysql.cursors
+from os.path import exists
 
 
 # This file accesses the data
@@ -60,9 +61,20 @@ def create_database_connection():
     database_details = {"url": "database-td457.cgrre17yxw11.eu-west-2.rds.amazonaws.com", 
                     "port": 3306}
 
+    if not exists("credentials.yaml"):
+        with open("credentials.yaml", "w") as file:
+            credentials_dict = {'username': input("Username: "), 
+                                'password': input("Password: ")}
+            yaml.dump(credentials_dict, file)
+
+    with open("credentials.yaml") as file:
+        credentials = yaml.safe_load(file)
+    username = credentials["username"]
+    password = credentials["password"] 
+
     conn = pymysql.connect(host=database_details["url"],
-                             user=input("Username: "),
-                             password=input("Password: "),
+                             user=username,
+                             password=password,
                              database='property_prices',
                              port=database_details["port"],
                              local_infile=1)
