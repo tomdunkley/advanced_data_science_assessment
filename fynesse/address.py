@@ -7,8 +7,8 @@ import numpy as np
 import statsmodels.api as sm
 
 """Address a particular question that arises from the data"""
-def predict_price(date_str, lattitude, longitude, property_type):
-    df, property_types, road_types, schools, osm_data, roads = assess.data()
+def predict_price(date_str, lattitude, longitude, property_type, bbox_size=0.01):
+    df, property_types, road_types, schools, osm_data, roads = assess.data(lattitude, longitude, date_str, bbox_size)
     school_distance = access.distance_to_nearest_school(lattitude, longitude, schools)
     nearby_building_count = access.building_count(lattitude, longitude, osm_data)
     road_type = access.get_nearest_road_type(lattitude, longitude, roads)
