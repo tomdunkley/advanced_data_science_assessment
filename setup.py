@@ -23,12 +23,12 @@ URL = "https://github.com/tomdunkley/advanced_data_science_assessment.git"
 EMAIL = "td457@cam.ac.uk"
 AUTHOR = "Tom Dunkley"
 REQUIRES_PYTHON = ">=3.6.0"
-VERSION = "0.1.4"
+VERSION = "0.1.5"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
     "pandas", "numpy", "jupyter", "matplotlib", "geopandas", "osmnx", "PyMySQL", "ipython-sql", "PyYAML", "statsmodels",
-    "sqlalchemy", "shapely"
+    "sqlalchemy", "shapely", "ipywidgets"
 ]
 
 # What packages are optional?
