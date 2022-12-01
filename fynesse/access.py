@@ -4,7 +4,6 @@ import osmnx, geopandas, yaml
 import pandas as pd
 from sqlalchemy.engine import create_engine
 from shapely.geometry import Point
-from ipywidgets import interact_manual, Text, Password
 
 
 # This file accesses the data
@@ -62,13 +61,10 @@ def create_database_connection():
                     "port": 3306}
 
     # get credentials
-    @interact_manual(username=Text(description="Username:"), 
-                    password=Password(description="Password:"))
-    def write_credentials(username, password):
-        with open("credentials.yaml", "w") as file:
-            credentials_dict = {'username': username, 
-                                'password': password}
-            yaml.dump(credentials_dict, file)
+    with open("credentials.yaml", "w") as file:
+        credentials_dict = {'username': input("Username: "), 
+                            'password': input("Password: ")}
+        yaml.dump(credentials_dict, file)
 
     with open("credentials.yaml") as file:
         credentials = yaml.safe_load(file)
