@@ -48,7 +48,8 @@ def data(lat, lon, bbox_size, date_str):
 
 
     roads = osm_data[(osm_data["highway"]==osm_data["highway"]) & (osm_data.geom_type=="LineString")] # get only highways (not nans) that are "ways"
-
+    print(osm_data)
+    print(df.apply(lambda row: get_nearest_road_type(float(row["lattitude"]), float(row["longitude"]), roads), axis=1))
     df["road_type"] = df.apply(lambda row: get_nearest_road_type(float(row["lattitude"]), float(row["longitude"]), roads), axis=1) 
 
 
