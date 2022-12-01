@@ -12,10 +12,10 @@ from shapely.geometry import Point
 
 def data(lat, lon, bbox_size, date_str):
     """Read the data from the web or local file, returning structured format such as a data frame"""
-    max_lat = lat+bbox_size
-    min_lat = lat-bbox_size
-    max_lon = lon+bbox_size
-    min_lon = lon-bbox_size
+    max_lat = float(lat)+float(bbox_size)
+    min_lat = float(lat)-float(bbox_size)
+    max_lon = float(lon)+float(bbox_size)
+    min_lon = float(lon)-float(bbox_size)
     min_year = str(int(date_str[:4]) - 1) + date_str[4:]
     max_year = str(int(date_str[:4]) + 1) + date_str[4:]
     df = getPostcodesWithinBbox(min_lat, max_lat, min_lon, max_lon, min_year, max_year, create_database_connection())
