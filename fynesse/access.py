@@ -22,6 +22,13 @@ def data(lat, lon, bbox_size, date_str):
     max_year = str(int(date_str[:4]) + 1) + date_str[4:]
     df = getPostcodesWithinBbox(min_lat, max_lat, min_lon, max_lon, min_year, max_year)
 
+    while len(df) < 10:
+        max_lat += float(bbox_size*10)
+        min_lat -= float(bbox_size*10)
+        max_lon += float(bbox_size*10)
+        min_lon -= float(bbox_size*10)
+        df = getPostcodesWithinBbox(min_lat, max_lat, min_lon, max_lon, min_year, max_year)
+
     # set geometry column
     df["geometry"] = geopandas.points_from_xy(df.longitude, df.lattitude)
 
